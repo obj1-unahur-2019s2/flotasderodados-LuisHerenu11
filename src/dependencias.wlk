@@ -1,8 +1,10 @@
-import rodados.*
+import vehiculos.*
+import pedidos.*
+
 class Dependencia {
-	var flota = []	
+	var property flota = []	
 	var property cantidadDeEmpleados
-	var pedidos = []
+	var property pedidos = []
 	
 	method agregarAFlota(vehiculo) { flota.add(vehiculo) }
 	method quitarDeFlota(vehiculo) { flota.remove(vehiculo) }
@@ -59,5 +61,20 @@ class Dependencia {
 	}
 	method relajarPedidos(){
 		pedidos.forEach({ pedido => pedido.relajar() })
+	}
+	method totalPasajeros() {
+		return pedidos.sum { p => p.cantidadPasajeros() }
+	}
+
+	method esIncompatibleParaTodos(color) {
+		return pedidos.all { p => p.esColorIncompatible(color) }
+	}
+
+	method pedidosSinSatisfacer() {
+		return pedidos.filter { p => not self.algunAutoPuedeSatisfacer(p) }
+	}
+
+	method algunAutoPuedeSatisfacer(pedido) {
+		return flota.any { v => pedido.puedeSerSatisfecho(v) }
 	}	
 }
